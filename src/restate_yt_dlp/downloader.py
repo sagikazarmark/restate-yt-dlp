@@ -25,7 +25,12 @@ class DownloadRequest(BaseModel):
     """Request for downloading a video using yt-dlp."""
 
     url: str
+    state: StateOptions | None
+
+
+class StateOptions(BaseModel):
     prefix: workstate.obstore.Prefix = pathlib.PurePosixPath("")
+    filter: workstate.obstore.IncludeExcludeFilter | None
 
 
 @final
@@ -36,7 +41,7 @@ class Downloader:
 
     def __init__(
         self,
-        state: workstate.StateManager[DownloadRequest],
+        state: workstate.StateManager[StateOptions | None],
         base_params: _Params | None = None,  # TODO: expose a custom param object
         options: DownloaderOptions | None = None,
         logger: logging.Logger = _logger,
@@ -54,7 +59,7 @@ class Downloader:
 
         params = self.base_params.copy()
 
-        with self.state.save(request) as output:
+        with self.state.save(request.state) as output:
             params["paths"] = {"home": output}  # pyright: ignore[reportGeneralTypeIssues]
 
             with yt_dlp.YoutubeDL(params) as ydl:
