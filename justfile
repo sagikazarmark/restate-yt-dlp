@@ -7,7 +7,7 @@ files:
   @mkdir -p var/files
 
 run: files
-  granian --interface asginl src/restate_yt_dlp.run:app --host 0.0.0.0 --port 9080 --reload
+  granian --interface asginl src.main:app --host 0.0.0.0 --port 9080 --reload
 
 # tag and release a new version
 release bump='patch':

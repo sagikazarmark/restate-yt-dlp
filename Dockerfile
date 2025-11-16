@@ -17,4 +17,4 @@ RUN uv sync --locked --extra app
 
 EXPOSE 9080
 
-CMD [ "uv", "run", "granian", "--interface", "asginl", "src/restate_yt_dlp.run:app", "--host", "0.0.0.0", "--port", "9080" ]
+CMD [ "uv", "run", "granian", "--interface", "asginl", "src.main:app", "--host", "0.0.0.0", "--port", "9080" ]

@@ -7,7 +7,7 @@ import workstate.obstore
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-from . import Downloader, DownloaderOptions, create_service
+from .restate_yt_dlp import Downloader, DownloaderOptions, create_service
 
 
 class Settings(BaseSettings):
