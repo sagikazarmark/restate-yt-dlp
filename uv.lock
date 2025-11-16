@@ -292,7 +292,7 @@ requires-dist = [
     { name = "pydantic", specifier = ">=2.12.4" },
     { name = "pydantic-settings", marker = "extra == 'app'", specifier = ">=2.12.0" },
     { name = "restate-sdk", extras = ["serde"], specifier = ">=0.11.0" },
-    { name = "workstate", git = "https://github.com/sagikazarmark/workstate" },
+    { name = "workstate", git = "https://github.com/sagikazarmark/workstate?rev=main" },
     { name = "yt-dlp", specifier = ">=2025.10.22" },
 ]
 provides-extras = ["app"]
@@ -435,7 +435,7 @@ wheels = [
 [[package]]
 name = "workstate"
 version = "0.1.0"
-source = { git = "https://github.com/sagikazarmark/workstate#31902c58f2287bc6518ddd9edf9a37af2511ad3a" }
+source = { git = "https://github.com/sagikazarmark/workstate?rev=main#5226367535f4461e34a647edcbf4b265f1a61839" }
 dependencies = [
     { name = "pydantic" },
 ]
