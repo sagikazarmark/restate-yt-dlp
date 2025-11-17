@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 import pathlib
-from typing import TYPE_CHECKING, final
+from typing import TYPE_CHECKING, Any, final
 
 import workstate
 import workstate.obstore
@@ -15,16 +15,11 @@ if TYPE_CHECKING:
 _logger = logging.getLogger(__name__)
 
 
-class DownloaderOptions(BaseModel):
-    """Options for the downloader."""
-
-    # filter: Filter = Field(default=Filter(), description="File filter options")
-
-
 class DownloadRequest(BaseModel):
     """Request for downloading a video using yt-dlp."""
 
     url: str
+    params: dict[str, Any] | None = None
     state: StateOptions | None = None
 
 
@@ -42,18 +37,20 @@ class Downloader:
     def __init__(
         self,
         state: workstate.StateManager[StateOptions | None],
-        base_params: _Params | None = None,  # TODO: expose a custom param object
-        options: DownloaderOptions | None = None,
+        base_params: _Params | None = None,
         logger: logging.Logger = _logger,
     ):
         self.state = state
         self.base_params: _Params = base_params.copy() if base_params else {}
-        self.options = options or DownloaderOptions()
         self.logger = logger
 
     @final
     def download(self, request: DownloadRequest):
-        logger = logging.LoggerAdapter(self.logger, {"url": request.url})
+        logger = logging.LoggerAdapter(
+            self.logger,
+            {"url": request.url},
+            merge_extra=True,
+        )
 
         logger.info("Downloading video")
 

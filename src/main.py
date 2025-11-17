@@ -1,3 +1,4 @@
+import logging
 from typing import Any
 
 import obstore
@@ -7,7 +8,7 @@ import workstate.obstore
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-from .restate_yt_dlp import Downloader, DownloaderOptions, create_service
+from .restate_yt_dlp import Downloader, create_service
 
 
 class Settings(BaseSettings):
@@ -17,7 +18,6 @@ class Settings(BaseSettings):
     object_store_url: str
     obstore_allow_http: bool = False
     youtube_params: dict[str, Any] | None = None  # pyright: ignore[reportExplicitAny]
-    options: DownloaderOptions = DownloaderOptions()
     identity_keys: list[str] = Field(alias="restate_identity_keys", default=[])
 
 
@@ -29,10 +29,11 @@ store = obstore.store.from_url(
 )
 state = workstate.obstore.StateManager(store)
 
+logging.basicConfig(level=logging.INFO)
+
 downloader = Downloader(
     state,
     settings.youtube_params,  # pyright: ignore[reportArgumentType]
-    settings.options,
 )
 
 service = create_service(downloader, service_name=settings.service_name)
