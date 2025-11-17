@@ -25,12 +25,12 @@ class DownloadRequest(BaseModel):
     """Request for downloading a video using yt-dlp."""
 
     url: str
-    state: StateOptions | None
+    state: StateOptions | None = None
 
 
 class StateOptions(BaseModel):
     prefix: workstate.obstore.Prefix = pathlib.PurePosixPath("")
-    filter: workstate.obstore.IncludeExcludeFilter | None
+    filter: workstate.obstore.IncludeExcludeFilter | None = None
 
 
 @final
