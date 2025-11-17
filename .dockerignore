@@ -1,10 +1,11 @@
-/.devenv/
+/.devenv*
 /.direnv/
+__pycache__/
 /var/
-*.nix
-.dockerignore
-.envrc
-devenv.*
-docker-compose.yaml
-Dockerfile
-justfile
+.env
+.env.local
+.pre-commit-config.yaml
+devenv.local.nix
+
+# Make sure uv works with the Python version in the Dockerfile
+.python-version
