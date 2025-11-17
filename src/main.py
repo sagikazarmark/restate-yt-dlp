@@ -13,6 +13,7 @@ from .restate_yt_dlp import Downloader, DownloaderOptions, create_service
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_nested_delimiter="__")  # pyright: ignore[reportUnannotatedClassAttribute]
 
+    service_name: str = "YoutubeDownloader"
     object_store_url: str
     obstore_allow_http: bool = False
     youtube_params: dict[str, Any] | None = None  # pyright: ignore[reportExplicitAny]
@@ -34,6 +35,6 @@ downloader = Downloader(
     settings.options,
 )
 
-service = create_service(downloader)
+service = create_service(downloader, service_name=settings.service_name)
 
 app = restate.app(services=[service], identity_keys=settings.identity_keys)
