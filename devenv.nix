@@ -20,5 +20,7 @@
       uv.enable = true;
       venv.enable = true;
     };
+
+    deno.enable = true;
   };
 }

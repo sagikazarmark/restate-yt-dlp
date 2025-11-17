@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 import pathlib
-from typing import TYPE_CHECKING, Any, final
+from typing import TYPE_CHECKING, Any, cast, final
 
 import workstate
 import workstate.obstore
@@ -10,7 +10,7 @@ import yt_dlp
 from pydantic import BaseModel
 
 if TYPE_CHECKING:
-    from yt_dlp import _Params  # pyright: ignore[reportPrivateUsage]
+    from yt_dlp import _Params
 
 _logger = logging.getLogger(__name__)
 
@@ -37,11 +37,15 @@ class Downloader:
     def __init__(
         self,
         state: workstate.StateManager[StateOptions | None],
-        base_params: _Params | None = None,
+        default_params: _Params | None = None,
+        override_params: _Params | None = None,
         logger: logging.Logger = _logger,
     ):
         self.state = state
-        self.base_params: _Params = base_params.copy() if base_params else {}
+        self.default_params: _Params = default_params.copy() if default_params else {}
+        self.override_params: _Params = (
+            override_params.copy() if override_params else {}
+        )
         self.logger = logger
 
     @final
@@ -54,7 +58,12 @@ class Downloader:
 
         logger.info("Downloading video")
 
-        params = self.base_params.copy()
+        params = cast(
+            "_Params",
+            self.default_params.copy()
+            | (request.params or {})
+            | self.override_params.copy(),
+        )
 
         with self.state.save(request.state) as output:
             params["paths"] = {"home": output}  # pyright: ignore[reportGeneralTypeIssues]
