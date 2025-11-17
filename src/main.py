@@ -37,7 +37,8 @@ logging.basicConfig(level=logging.INFO)
 
 downloader = Downloader(
     state,
-    cast("_Params", settings.ytdlp_defaults),
+    default_params=cast("_Params", settings.ytdlp_defaults),
+    override_params=cast("_Params", settings.ytdlp_overrides),
 )
 
 service = create_service(downloader, service_name=settings.service_name)
