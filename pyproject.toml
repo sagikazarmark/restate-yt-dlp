@@ -27,3 +27,24 @@ build-backend = "uv_build"
 
 [tool.uv.sources]
 workstate = { git = "https://github.com/sagikazarmark/workstate", rev = "main" }
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.1",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "-v",
+    "--tb=short",
+    "--strict-markers",
+    "--disable-warnings",
+]
+markers = [
+    "integration: marks tests as integration tests",
+    "slow: marks tests as slow",
+]

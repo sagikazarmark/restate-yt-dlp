@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from datetime import timedelta
-
 import restate
 
 from .downloader import Downloader, DownloadRequest
@@ -24,13 +22,6 @@ def register_service(
 ):
     service = service or restate.Service("YoutubeDownloader")
 
-    @service.handler(  # pyright: ignore [reportUnknownMemberType, reportUntypedFunctionDecorator]
-        # TODO: make this configurable?
-        inactivity_timeout=timedelta(minutes=30),
-        abort_timeout=timedelta(minutes=30),
-    )
-    async def download(  # pyright: ignore [reportUnusedFunction]
-        ctx: restate.Context,
-        request: DownloadRequest,
-    ):
-        _ = await ctx.run_typed("download", downloader.download, request=request)
+    @service.handler()
+    async def download(ctx: restate.Context, request: DownloadRequest):
+        await ctx.run_typed("download", downloader.download, request=request)
