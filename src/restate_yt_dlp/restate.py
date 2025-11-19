@@ -1,6 +1,11 @@
-import restate
+from typing import Sequence
 
-from .downloader import Downloader, DownloadRequest
+import restate
+from pydantic import BaseModel
+
+from restate_yt_dlp.options import DownloadOptions
+
+from .downloader import Downloader, StateOptions
 
 
 def create_service(
@@ -14,6 +19,14 @@ def create_service(
     return service
 
 
+class DownloadRequest(BaseModel):
+    """Request for downloading a video using yt-dlp."""
+
+    url: str | Sequence[str]
+    options: DownloadOptions | None = None
+    state: StateOptions | None = None
+
+
 def register_service(
     downloader: Downloader,
     service: restate.Service | None = None,
@@ -22,4 +35,10 @@ def register_service(
 
     @service.handler()
     async def download(ctx: restate.Context, request: DownloadRequest):
-        await ctx.run_typed("download", downloader.download, request=request)
+        await ctx.run_typed(
+            "download",
+            downloader.download,
+            url=request.url,
+            options=request.options,
+            state=request.state,
+        )

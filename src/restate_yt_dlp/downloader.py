@@ -23,14 +23,6 @@ class StateOptions(BaseModel):
     filter: IncludeExcludeFilter | None = None
 
 
-class DownloadRequest(BaseModel):
-    """Request for downloading a video using yt-dlp."""
-
-    url: str | Sequence[str]
-    options: DownloadOptions | None = None
-    state: StateOptions | None = None
-
-
 class Downloader:
     """
     Downloader for videos using yt-dlp and save them to object storage.
@@ -46,23 +38,28 @@ class Downloader:
         self.defaults: _Params = defaults.copy() if defaults else {}
         self.logger = logger
 
-    def download(self, request: DownloadRequest):
+    def download(
+        self,
+        url: str | Sequence[str],
+        options: DownloadOptions | None = None,
+        state: StateOptions | None = None,
+    ):
         logger = logging.LoggerAdapter(
             self.logger,
-            {"url": request.url},
+            {"url": url},
             merge_extra=True,
         )
 
         logger.info("Downloading video")
 
-        with self.state.save(request.state) as output:
+        with self.state.save(state) as output:
             params = cast(
                 "_Params",
                 self.defaults.copy()
-                | (request.options.model_dump() if request.options else {})
+                | (options.model_dump() if options else {})
                 | {"paths": {"home": output}},
             )
 
-            yt_dlp.YoutubeDL(params).download(request.url)
+            yt_dlp.YoutubeDL(params).download(url)
 
             logger.info("Downloading video completed")
