@@ -10,6 +10,7 @@ requires-python = ">=3.13"
 dependencies = [
     "obstore>=0.8.2",
     "pydantic>=2.12.4",
+    "pydantic-obstore",
     "restate-sdk[serde]>=0.11.0",
     "workstate",
     "yt-dlp[default]>=2025.10.22",
@@ -27,6 +28,7 @@ build-backend = "uv_build"
 
 [tool.uv.sources]
 workstate = { git = "https://github.com/sagikazarmark/workstate", rev = "main" }
+pydantic-obstore = { git = "https://github.com/sagikazarmark/pydantic-obstore", rev = "v0.0.2" }
 
 [dependency-groups]
 dev = [

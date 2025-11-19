@@ -439,6 +439,14 @@ wheels = [
 ]
 
 [[package]]
+name = "pydantic-obstore"
+version = "0.0.2"
+source = { git = "https://github.com/sagikazarmark/pydantic-obstore?rev=v0.0.2#129a8135b464e793e7258a785ba9d76527b85ab0" }
+dependencies = [
+    { name = "pydantic" },
+]
+
+[[package]]
 name = "pydantic-settings"
 version = "2.12.0"
 source = { registry = "https://pypi.org/simple" }
@@ -533,6 +541,7 @@ source = { editable = "." }
 dependencies = [
     { name = "obstore" },
     { name = "pydantic" },
+    { name = "pydantic-obstore" },
     { name = "restate-sdk", extra = ["serde"] },
     { name = "workstate" },
     { name = "yt-dlp", extra = ["default"] },
@@ -554,6 +563,7 @@ requires-dist = [
     { name = "granian", extras = ["pname", "reload"], marker = "extra == 'app'", specifier = ">=2.5.7" },
     { name = "obstore", specifier = ">=0.8.2" },
     { name = "pydantic", specifier = ">=2.12.4" },
+    { name = "pydantic-obstore", git = "https://github.com/sagikazarmark/pydantic-obstore?rev=v0.0.2" },
     { name = "pydantic-settings", marker = "extra == 'app'", specifier = ">=2.12.0" },
     { name = "restate-sdk", extras = ["serde"], specifier = ">=0.11.0" },
     { name = "workstate", git = "https://github.com/sagikazarmark/workstate?rev=main" },
