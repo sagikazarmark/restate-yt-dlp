@@ -115,7 +115,7 @@ class ObstoreSettings(BaseModel):
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_nested_delimiter="__")  # pyright: ignore[reportUnannotatedClassAttribute]
 
-    service_name: str = "YoutubeDownloader"
+    service_name: str = "yt-dlp"
 
     obstore: ObstoreSettings
 
