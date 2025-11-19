@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import restate
 
 from .downloader import Downloader, DownloadRequest
