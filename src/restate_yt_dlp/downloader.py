@@ -10,7 +10,7 @@ import yt_dlp
 from pydantic import BaseModel
 from workstate.obstore import IncludeExcludeFilter, Prefix
 
-from .options import DownloadOptions
+from .options2 import DownloadOptions
 
 if TYPE_CHECKING:
     from yt_dlp import _Params
@@ -55,9 +55,7 @@ class Downloader:
         with self.state.save(state) as output:
             params = cast(
                 "_Params",
-                self.defaults.copy()
-                | (options.model_dump() if options else {})
-                | {"paths": {"home": output}},
+                {**self.defaults.copy(), **(options or {}), "paths": {"home": output}},
             )
 
             yt_dlp.YoutubeDL(params).download(url)
