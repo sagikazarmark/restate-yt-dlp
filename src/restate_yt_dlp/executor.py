@@ -30,6 +30,7 @@ class DownloadRequest(BaseModel):
                     "output": {
                         "ref": "s3://bucket/videoid/",
                     },
+                    "options": {},
                 },
             ]
         }
