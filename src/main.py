@@ -27,7 +27,7 @@ class ObstoreSettings(pydantic_obstore.Config):
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_nested_delimiter="__")  # pyright: ignore[reportUnannotatedClassAttribute]
 
-    obstore: ObstoreSettings
+    obstore: ObstoreSettings = Field(default_factory=ObstoreSettings)
 
     yt_dlp_defaults: dict[str, Any] | None = None
 

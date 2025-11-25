@@ -43,6 +43,10 @@ ENV PATH="/usr/src/app/.venv/bin:$PATH" \
 
 COPY --from=builder /usr/src/app .
 
+COPY docker-entrypoint.sh /
+RUN chmod +x /docker-entrypoint.sh
+
 EXPOSE 9080
 
+ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD [ "python", "-m", "granian", "--interface", "asginl", "src.main:app", "--host", "0.0.0.0", "--port", "9080" ]
