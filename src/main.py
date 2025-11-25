@@ -6,11 +6,13 @@ from typing import TYPE_CHECKING, Any, cast
 import obstore
 import pydantic_obstore
 import restate
+import structlog
 import workstate
 import workstate.obstore
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+from .logger import Logger
 from .restate_yt_dlp import Executor, create_service
 
 if TYPE_CHECKING:
@@ -36,7 +38,8 @@ class Settings(BaseSettings):
 
 settings = Settings()  # pyright: ignore[reportCallIssue]
 
-logging.basicConfig(level=logging.INFO)
+# logging.basicConfig(level=logging.INFO)
+structlog.stdlib.recreate_defaults(log_level=logging.INFO)
 
 store: obstore.store.ObjectStore | None = None
 client_options: ClientConfig | None = None
@@ -50,11 +53,20 @@ if settings.obstore.client_options:
 if settings.obstore.url:
     store = obstore.store.from_url(settings.obstore.url, client_options=client_options)
 
-persister = workstate.obstore.DirectoryPersister(store, client_options=client_options)
+persister = workstate.obstore.DirectoryPersister(
+    store,
+    client_options=client_options,
+    logger=structlog.get_logger("workstate"),
+)
 
 executor = Executor(
     persister,
-    defaults=cast("_Params", settings.yt_dlp_defaults),
+    defaults=cast(
+        "_Params",
+        (settings.yt_dlp_defaults or {})
+        | {"logger": Logger(structlog.get_logger("yt-dlp"))},
+    ),
+    logger=structlog.get_logger("executor"),
 )
 
 service = create_service(executor, service_name=settings.service_name)
