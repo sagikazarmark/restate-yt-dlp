@@ -41,3 +41,9 @@ jobs:
 
       - name: Minimize uv cache
         run: uv cache prune --ci
+
+      - name: Run tests
+        run: uv run pytest
+
+      - name: Run checks
+        run: uv run ruff check
