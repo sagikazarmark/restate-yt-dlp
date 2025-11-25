@@ -551,7 +551,7 @@ serde = [
 
 [[package]]
 name = "restate-yt-dlp"
-version = "0.0.0"
+version = "0.0.15"
 source = { editable = "." }
 dependencies = [
     { name = "pathspec" },
