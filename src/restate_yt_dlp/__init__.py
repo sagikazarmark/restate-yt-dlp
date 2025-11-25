@@ -1,10 +1,9 @@
-from .downloader import Downloader
+from .executor import Executor
 from .options import DownloadOptions
-from .restate import DownloadRequest, create_service, register_service
+from .restate import create_service, register_service
 
 __all__ = [
-    "Downloader",
-    "DownloadRequest",
+    "Executor",
     "DownloadOptions",
     "create_service",
     "register_service",
