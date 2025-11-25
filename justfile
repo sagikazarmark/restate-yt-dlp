@@ -2,11 +2,15 @@
 default:
   @just --list
 
-[private]
-files:
-  @mkdir -p var/files
+start:
+  @mkdir -p var/
+  docker compose up -d
+  mc mb rustfs/bucket --ignore-existing
 
-run: files
+stop:
+  docker compose down
+
+run:
   granian --interface asginl src.main:app --host 0.0.0.0 --port 9080 --reload
 
 # tag and release a new version
@@ -33,5 +37,10 @@ release bump='patch':
       ;;
   esac
 
+  uv version $version
+  git add pyproject.toml uv.lock
+  git commit -m "Release ${version}"
+
   git tag -m "Release ${version}" $tag
   git push origin $tag
+  git push
