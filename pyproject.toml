@@ -1,7 +1,7 @@
 [project]
 name = "restate-yt-dlp"
 version = "0.0.16"
-description = "Durable workflow component for downloading videos from YouTube"
+description = "A Restate service for yt-dlp"
 readme = "README.md"
 authors = [
     { name = "Mark Sagi-Kazar", email = "mark.sagikazar@gmail.com" }
