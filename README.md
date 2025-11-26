@@ -5,7 +5,7 @@
 
 **A Restate service for yt-dlp.**
 
-This service provides a durable, fault-tolerant wrapper around [yt-dlp](https://github.com/yt-dlp/yt-dlp) for downloading videos from YouTube and other platforms.
+This service provides a durable, fault-tolerant wrapper around [yt-dlp](https://github.com/yt-dlp/yt-dlp) for downloading videos.
 Built on [Restate](https://restate.dev), it ensures reliable video processing with automatic retries, state management, and seamless integration with object storage systems.
 
 ## Features
