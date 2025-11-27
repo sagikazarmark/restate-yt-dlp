@@ -1,6 +1,6 @@
 [project]
 name = "restate-yt-dlp"
-version = "0.1.0"
+version = "0.1.1"
 description = "A Restate service for yt-dlp"
 readme = "README.md"
 authors = [
