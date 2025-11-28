@@ -44,8 +44,8 @@ class DownloadRequest(BaseModel):
 
 
 class DownloadRequestOutput(BaseModel):
-    ref: AnyUrl | PurePosixPath = Field(
-        description="Output reference for downloaded content",
+    destination: AnyUrl | PurePosixPath = Field(
+        description="Output destination for downloaded content",
         examples=["s3://bucket/videoid/"],
         union_mode="left_to_right",  # This is important to keep best match order (TODO: consider using a custom discriminator)
     )
@@ -161,7 +161,7 @@ class Executor:
             logger.info("Downloading video completed")
 
             self.persister.persist(
-                request.output.ref,
+                request.output.destination,
                 Path(tmpdir),
                 request.output.filter,
             )
