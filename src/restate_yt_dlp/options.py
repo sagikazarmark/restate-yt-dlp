@@ -46,7 +46,7 @@ class DownloadOptions(BaseModel):
     )
 
     # Output templates and paths
-    outtmpl: SafeRelativePath | Mapping[str, SafeRelativePath] | None = Field(
+    outtmpl: str | Mapping[str, str] | None = Field(
         default=None,
         description="Dictionary of templates for output names or single string for compatibility",
     )
