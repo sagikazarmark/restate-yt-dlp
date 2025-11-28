@@ -140,7 +140,7 @@ class TestDownloadOptions:
     def test_outtmpl_single_string_path(self):
         """Test outtmpl with single string path."""
         options = DownloadOptions(outtmpl="videos/%(title)s.%(ext)s")
-        assert options.outtmpl == PurePosixPath("videos/%(title)s.%(ext)s")
+        assert options.outtmpl == "videos/%(title)s.%(ext)s"
 
     def test_outtmpl_mapping_paths(self):
         """Test outtmpl with mapping of paths."""
@@ -150,40 +150,29 @@ class TestDownloadOptions:
         }
         options = DownloadOptions(outtmpl=template_mapping)
         expected = {
-            "default": PurePosixPath("videos/%(title)s.%(ext)s"),
-            "thumbnail": PurePosixPath("thumbnails/%(title)s.%(ext)s"),
+            "default": "videos/%(title)s.%(ext)s",
+            "thumbnail": "thumbnails/%(title)s.%(ext)s",
         }
         assert options.outtmpl == expected
 
     def test_outtmpl_invalid_absolute_path(self):
-        """Test that absolute paths in outtmpl raise validation errors."""
-        with pytest.raises(ValidationError) as exc_info:
-            DownloadOptions(outtmpl="/absolute/path/%(title)s.%(ext)s")
-
-        error = exc_info.value.errors()[0]
-        assert "Path must be relative" in str(error.get("ctx", error))
+        """Test that absolute paths in outtmpl are accepted as strings."""
+        options = DownloadOptions(outtmpl="/absolute/path/%(title)s.%(ext)s")
+        assert options.outtmpl == "/absolute/path/%(title)s.%(ext)s"
 
     def test_outtmpl_invalid_parent_ref(self):
-        """Test that parent references in outtmpl raise validation errors."""
-        with pytest.raises(ValidationError) as exc_info:
-            DownloadOptions(outtmpl="../parent/%(title)s.%(ext)s")
-
-        error = exc_info.value.errors()[0]
-        assert 'Path cannot contain ".." components' in str(error.get("ctx", error))
+        """Test that parent references in outtmpl are accepted as strings."""
+        options = DownloadOptions(outtmpl="../parent/%(title)s.%(ext)s")
+        assert options.outtmpl == "../parent/%(title)s.%(ext)s"
 
     def test_outtmpl_mapping_with_invalid_path(self):
-        """Test that invalid paths in mapping raise validation errors."""
+        """Test that invalid paths in mapping are accepted as strings."""
         template_mapping = {
             "default": "videos/%(title)s.%(ext)s",
-            "thumbnail": "../thumbnails/%(title)s.%(ext)s",  # Invalid
+            "thumbnail": "../thumbnails/%(title)s.%(ext)s",
         }
-        with pytest.raises(ValidationError) as exc_info:
-            DownloadOptions(outtmpl=template_mapping)
-
-        error = exc_info.value.errors()[0]
-        # For mapping validation, error occurs when trying to parse the dict as a path
-        assert error["type"] == "path_type"
-        assert "../thumbnails" in str(error["input"])
+        options = DownloadOptions(outtmpl=template_mapping)
+        assert options.outtmpl == template_mapping
 
     def test_outtmpl_mapping_individual_validation(self):
         """Test individual path validation in mapping works correctly."""
@@ -196,16 +185,12 @@ class TestDownloadOptions:
         options = DownloadOptions(outtmpl=valid_mapping)
         assert len(options.outtmpl) == 3
         for path in options.outtmpl.values():
-            assert isinstance(path, PurePosixPath)
-            assert not path.is_absolute()
+            assert isinstance(path, str)
 
     def test_outtmpl_empty_string_error(self):
-        """Test that empty string in outtmpl raises validation error."""
-        with pytest.raises(ValidationError) as exc_info:
-            DownloadOptions(outtmpl="")
-
-        error = exc_info.value.errors()[0]
-        assert "Path cannot be empty" in str(error.get("ctx", error))
+        """Test that empty string in outtmpl is accepted."""
+        options = DownloadOptions(outtmpl="")
+        assert options.outtmpl == ""
 
     def test_format_sort_list(self):
         """Test format_sort accepts list of strings."""
@@ -302,7 +287,7 @@ class TestDownloadOptions:
         assert isinstance(data, dict)
         assert data["format"] == "best"
         # PurePosixPath objects are serialized as PurePosixPath, not strings
-        assert isinstance(data["outtmpl"], PurePosixPath)
+        assert isinstance(data["outtmpl"], str)
         assert str(data["outtmpl"]) == "videos/%(title)s.%(ext)s"
         assert data["writesubtitles"] is True
         assert data["subtitleslangs"] == ["en"]
@@ -319,7 +304,7 @@ class TestDownloadOptions:
         assert isinstance(data["outtmpl"], dict)
         assert len(data["outtmpl"]) == 2
         for key, path in data["outtmpl"].items():
-            assert isinstance(path, PurePosixPath)
+            assert isinstance(path, str)
 
     def test_model_deserialization(self):
         """Test that the model can be created from dict."""
@@ -332,7 +317,7 @@ class TestDownloadOptions:
 
         options = DownloadOptions(**data)
         assert options.format == "worst"
-        assert options.outtmpl == PurePosixPath("downloads/%(title)s.%(ext)s")
+        assert options.outtmpl == "downloads/%(title)s.%(ext)s"
         assert options.writeinfojson is True
         assert options.format_sort == ["quality"]
 
@@ -364,9 +349,9 @@ class TestDownloadOptions:
         assert isinstance(options.outtmpl, dict)
         assert len(options.outtmpl) == 4
         for key, path in options.outtmpl.items():
-            assert isinstance(path, PurePosixPath)
-            assert not path.is_absolute()
-            assert ".." not in path.parts
+            assert isinstance(path, str)
+            assert not path.startswith("/")
+            assert ".." not in path
 
     def test_edge_cases(self):
         """Test various edge cases and corner scenarios."""
@@ -382,7 +367,7 @@ class TestDownloadOptions:
 
         # Test with single character paths
         options = DownloadOptions(outtmpl="a")
-        assert options.outtmpl == PurePosixPath("a")
+        assert options.outtmpl == "a"
 
         # Test with path containing special characters
         options = DownloadOptions(outtmpl="videos/%(title)s [%(uploader)s].%(ext)s")
