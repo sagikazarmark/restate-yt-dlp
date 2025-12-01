@@ -1,7 +1,6 @@
 from pathlib import PurePosixPath
 
 import pytest
-from pydantic import ValidationError
 
 from restate_yt_dlp.options import (
     DownloadOptions,
