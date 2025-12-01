@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 import restate
 
 from .executor import DownloadRequest, Executor
@@ -6,8 +8,14 @@ from .executor import DownloadRequest, Executor
 def create_service(
     downloader: Executor,
     service_name: str = "yt-dlp",
+    inactivity_timeout: timedelta | None = None,
+    abort_timeout: timedelta | None = None,
 ) -> restate.Service:
-    service = restate.Service(service_name)
+    service = restate.Service(
+        service_name,
+        inactivity_timeout=inactivity_timeout,
+        abort_timeout=abort_timeout,
+    )
 
     register_service(downloader, service)
 

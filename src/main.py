@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+from datetime import timedelta
 from typing import TYPE_CHECKING, Any, cast
 
 import obstore
@@ -33,6 +34,11 @@ class Settings(BaseSettings):
 
     service_name: str = "yt-dlp"
 
+    inactivity_timeout: timedelta | None = Field(
+        alias="restate_inactivity_timeout",
+        default=None,
+    )
+    abort_timeout: timedelta | None = Field(alias="restate_abort_timeout", default=None)
     identity_keys: list[str] = Field(alias="restate_identity_keys", default=[])
 
 
@@ -69,6 +75,11 @@ executor = Executor(
     logger=structlog.get_logger("executor"),
 )
 
-service = create_service(executor, service_name=settings.service_name)
+service = create_service(
+    executor,
+    service_name=settings.service_name,
+    inactivity_timeout=settings.inactivity_timeout,
+    abort_timeout=settings.abort_timeout,
+)
 
 app = restate.app(services=[service], identity_keys=settings.identity_keys)
