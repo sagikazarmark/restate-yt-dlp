@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 import logging
 from datetime import timedelta
-from typing import TYPE_CHECKING, Any, cast
+from typing import TYPE_CHECKING, cast
 
 import obstore
 import pydantic_obstore
@@ -21,6 +21,7 @@ from pydantic import BaseModel, Field, RedisDsn
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from .logger import Logger
+from .params import Params
 from .restate_yt_dlp import Executor, Progress, create_service
 from .restate_yt_dlp.executor import ProgressHook
 
@@ -46,7 +47,7 @@ class Settings(BaseSettings):
 
     obstore: ObstoreSettings = Field(default_factory=ObstoreSettings)
 
-    yt_dlp_defaults: dict[str, Any] | None = None
+    yt_dlp_defaults: Params | None = None
 
     valkey: ValkeySettings | None = Field(default=None, description="Valkey settings")
 
