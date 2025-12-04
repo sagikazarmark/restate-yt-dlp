@@ -9,11 +9,9 @@ from typing import TYPE_CHECKING, Callable, Protocol, cast
 import pathspec
 import yt_dlp
 from pydantic import AnyUrl, BaseModel, ConfigDict, DirectoryPath, Field
-from restate.exceptions import TerminalError
 
 from .options import DownloadOptions
 from .progress import Progress
-from .utils import get_youtube_video_id
 
 if TYPE_CHECKING:
     from yt_dlp import _Params
@@ -148,12 +146,8 @@ class Executor:
             merge_extra=True,
         )
 
-        video_id = get_youtube_video_id(request.url)
-        if not video_id:
-            raise TerminalError("Invalid YouTube URL", 422)
-
         def progress_hook(progress: Progress):
-            key = f"yt-dlp:progress:{video_id}:{id}"
+            key = f"yt-dlp:progress:{id}"
 
             if self.progress_hook:
                 self.progress_hook(key, progress)
