@@ -28,7 +28,7 @@ class DownloadRequest(BaseModel):
                 {
                     "url": "https://www.youtube.com/watch?v=_fjbR0qKT8w",
                     "output": {
-                        "ref": "s3://bucket/videoid/",
+                        "destination": "s3://bucket/videoid/",
                     },
                     "options": {},
                 },
@@ -132,11 +132,12 @@ class Executor:
 
     def download(
         self,
+        id: str,
         request: DownloadRequest,
     ):
         logger = logging.LoggerAdapter(
             self.logger,
-            {"url": request.url},
+            {"id": id, "url": request.url},
             merge_extra=True,
         )
 

@@ -28,4 +28,9 @@ def register_service(
 ):
     @service.handler()
     async def download(ctx: restate.Context, request: DownloadRequest):
-        await ctx.run_typed("download", executor.download, request=request)
+        await ctx.run_typed(
+            "download",
+            executor.download,
+            id=ctx.request().id,
+            request=request,
+        )
