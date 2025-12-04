@@ -17,5 +17,35 @@ services:
       - ./var/rustfs/data:/data
       - ./var/rustfs/logs:/logs
 
+  valkey:
+    image: valkey/valkey:9.0
+    healthcheck:
+      test: ["CMD", "valkey-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    environment:
+      - VALKEY_EXTRA_FLAGS=--save 60 1 --loglevel warning
+    ports:
+      - 127.0.0.1:6379:6379
+    volumes:
+      - valkey-data:/data
+
+  redisinsight:
+    image: redis/redisinsight:latest
+    depends_on:
+      valkey:
+        condition: service_healthy
+    environment:
+      - REDIS_HOST=valkey
+      - REDIS_PORT=6379
+      - RI_DATABASE_MANAGEMENT=false
+    ports:
+      - 127.0.0.1:5540:5540
+    volumes:
+      - redisinsight-data:/data
+
 volumes:
   restate-data:
+  valkey-data:
+  redisinsight-data:

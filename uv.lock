@@ -340,6 +340,21 @@ wheels = [
 ]
 
 [[package]]
+name = "protobuf"
+version = "6.33.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/0a/03/a1440979a3f74f16cab3b75b0da1a1a7f922d56a8ddea96092391998edc0/protobuf-6.33.1.tar.gz", hash = "sha256:97f65757e8d09870de6fd973aeddb92f85435607235d20b2dfed93405d00c85b", size = 443432, upload-time = "2025-11-13T16:44:18.895Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/06/f1/446a9bbd2c60772ca36556bac8bfde40eceb28d9cc7838755bc41e001d8f/protobuf-6.33.1-cp310-abi3-win32.whl", hash = "sha256:f8d3fdbc966aaab1d05046d0240dd94d40f2a8c62856d41eaa141ff64a79de6b", size = 425593, upload-time = "2025-11-13T16:44:06.275Z" },
+    { url = "https://files.pythonhosted.org/packages/a6/79/8780a378c650e3df849b73de8b13cf5412f521ca2ff9b78a45c247029440/protobuf-6.33.1-cp310-abi3-win_amd64.whl", hash = "sha256:923aa6d27a92bf44394f6abf7ea0500f38769d4b07f4be41cb52bd8b1123b9ed", size = 436883, upload-time = "2025-11-13T16:44:09.222Z" },
+    { url = "https://files.pythonhosted.org/packages/cd/93/26213ff72b103ae55bb0d73e7fb91ea570ef407c3ab4fd2f1f27cac16044/protobuf-6.33.1-cp39-abi3-macosx_10_9_universal2.whl", hash = "sha256:fe34575f2bdde76ac429ec7b570235bf0c788883e70aee90068e9981806f2490", size = 427522, upload-time = "2025-11-13T16:44:10.475Z" },
+    { url = "https://files.pythonhosted.org/packages/c2/32/df4a35247923393aa6b887c3b3244a8c941c32a25681775f96e2b418f90e/protobuf-6.33.1-cp39-abi3-manylinux2014_aarch64.whl", hash = "sha256:f8adba2e44cde2d7618996b3fc02341f03f5bc3f2748be72dc7b063319276178", size = 324445, upload-time = "2025-11-13T16:44:11.869Z" },
+    { url = "https://files.pythonhosted.org/packages/8e/d0/d796e419e2ec93d2f3fa44888861c3f88f722cde02b7c3488fcc6a166820/protobuf-6.33.1-cp39-abi3-manylinux2014_s390x.whl", hash = "sha256:0f4cf01222c0d959c2b399142deb526de420be8236f22c71356e2a544e153c53", size = 339161, upload-time = "2025-11-13T16:44:12.778Z" },
+    { url = "https://files.pythonhosted.org/packages/1d/2a/3c5f05a4af06649547027d288747f68525755de692a26a7720dced3652c0/protobuf-6.33.1-cp39-abi3-manylinux2014_x86_64.whl", hash = "sha256:8fd7d5e0eb08cd5b87fd3df49bc193f5cfd778701f47e11d127d0afc6c39f1d1", size = 323171, upload-time = "2025-11-13T16:44:14.035Z" },
+    { url = "https://files.pythonhosted.org/packages/08/b4/46310463b4f6ceef310f8348786f3cff181cea671578e3d9743ba61a459e/protobuf-6.33.1-py3-none-any.whl", hash = "sha256:d595a9fd694fdeb061a62fbe10eb039cc1e444df81ec9bb70c7fc59ebcb1eafa", size = 170477, upload-time = "2025-11-13T16:44:17.633Z" },
+]
+
+[[package]]
 name = "pycparser"
 version = "2.23"
 source = { registry = "https://pypi.org/simple" }
@@ -567,6 +582,7 @@ app = [
     { name = "pydantic-obstore" },
     { name = "pydantic-settings" },
     { name = "structlog" },
+    { name = "valkey-glide-sync" },
     { name = "workstate", extra = ["obstore"] },
 ]
 
@@ -586,6 +602,7 @@ requires-dist = [
     { name = "pydantic-settings", marker = "extra == 'app'", specifier = ">=2.12.0" },
     { name = "restate-sdk", extras = ["serde"], specifier = ">=0.11.0" },
     { name = "structlog", marker = "extra == 'app'", specifier = ">=25.5.0" },
+    { name = "valkey-glide-sync", marker = "extra == 'app'", specifier = ">=2.2.1" },
     { name = "workstate", extras = ["obstore"], marker = "extra == 'app'", git = "https://github.com/sagikazarmark/workstate?rev=v0.0.11" },
     { name = "yt-dlp", extras = ["default"], specifier = ">=2025.10.22" },
 ]
@@ -717,6 +734,27 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/15/22/9ee70a2574a4f4599c47dd506532914ce044817c7752a79b6a51286319bc/urllib3-2.5.0.tar.gz", hash = "sha256:3fc47733c7e419d4bc3f6b3dc2b4f890bb743906a30d56ba4a5bfa4bbff92760", size = 393185, upload-time = "2025-06-18T14:07:41.644Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/a7/c2/fe1e52489ae3122415c51f387e221dd0773709bad6c6cdaa599e8a2c5185/urllib3-2.5.0-py3-none-any.whl", hash = "sha256:e6b01673c0fa6a13e374b50871808eb3bf7046c4b125b216f6bf1cc604cff0dc", size = 129795, upload-time = "2025-06-18T14:07:40.39Z" },
+]
+
+[[package]]
+name = "valkey-glide-sync"
+version = "2.2.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "cffi" },
+    { name = "protobuf" },
+    { name = "typing-extensions" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/dc/1a/057bdda1846fec3a3304635727b0738bc69e622db76ad666d9b2174baa25/valkey_glide_sync-2.2.1.tar.gz", hash = "sha256:0a1fe385b82f0de68fe0d8f005fb847a1c752940f695d8e68f347e4c17997398", size = 581109, upload-time = "2025-12-03T20:35:06.997Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/fd/d2/d03592c50815216c449bf3c8ad4c8ab5ffb07857d5345b5fe8fa70c9d2f0/valkey_glide_sync-2.2.1-cp313-cp313-macosx_10_13_x86_64.whl", hash = "sha256:c945722509499d7592689458cdc234af75f68c639cab6a0d147077161ea18f60", size = 5005535, upload-time = "2025-12-03T20:34:33.477Z" },
+    { url = "https://files.pythonhosted.org/packages/34/45/ab8c166e468b2b31a151f8d359d815e4e8fed2fa191a0d39031f2953761d/valkey_glide_sync-2.2.1-cp313-cp313-macosx_11_0_arm64.whl", hash = "sha256:dcfcc27e633b817baedd50148107ba7ed131eec8a73802b3f8c4e691a4e458d7", size = 4621431, upload-time = "2025-12-03T20:34:34.776Z" },
+    { url = "https://files.pythonhosted.org/packages/72/7b/2fd068ba265b91a0c660f93a861cb08431cacbd68e51e4be05026c2655e3/valkey_glide_sync-2.2.1-cp313-cp313-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:6ce011a0e3fdc3d0fadce4c461519fc785fba3c1bddff0766160eb7ab1ca58c1", size = 4794949, upload-time = "2025-12-03T20:34:35.939Z" },
+    { url = "https://files.pythonhosted.org/packages/e9/8f/2a7e90d45e8e94ba4c2ef527cfca6d5e9d3bbc54ba3baa171238125f28e1/valkey_glide_sync-2.2.1-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:df9388ad7df344c3ac124361bef7220d6a6998ea749a88fb4cd7eb1f4fd9c0d4", size = 5073164, upload-time = "2025-12-03T20:34:37.219Z" },
+    { url = "https://files.pythonhosted.org/packages/fd/ea/7b58cfc154193982afe119a73e71e6d7ffebb9675bcad5bec36b1003bb66/valkey_glide_sync-2.2.1-cp314-cp314-macosx_10_15_x86_64.whl", hash = "sha256:471d4e0f72464ee99d3f609bf0e0e17d3d78eb306c46d35a2d740acc59a21006", size = 5005711, upload-time = "2025-12-03T20:34:38.852Z" },
+    { url = "https://files.pythonhosted.org/packages/e4/6e/c87cce6bf43a26f6efda6944f472fa470bf82673eff9623f4d838a1db54e/valkey_glide_sync-2.2.1-cp314-cp314-macosx_11_0_arm64.whl", hash = "sha256:02d8d30e4bb93ec2b2799a6f1dbf698ce7db9f440995e66f3633eec367d29f4e", size = 4621432, upload-time = "2025-12-03T20:34:40.386Z" },
+    { url = "https://files.pythonhosted.org/packages/e3/6c/e7278b558ffee03ce6df6214e31cc6e9b8fa1f341941c6504baf6151d62d/valkey_glide_sync-2.2.1-cp314-cp314-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:3339fb7cef8c45fa723ec817828546a2b9cc64e2c8c560b8204debf1d075c575", size = 4794948, upload-time = "2025-12-03T20:34:41.569Z" },
+    { url = "https://files.pythonhosted.org/packages/51/e5/ee15c93a8259aa8dc9d1bcff8381dd31389bb5d9413cdae14d2ce55da7fc/valkey_glide_sync-2.2.1-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:374238f7b9f0c37480e82c0b5729485b8b9a558b7c103b7d742ca7f0dff24143", size = 5073164, upload-time = "2025-12-03T20:34:43.092Z" },
 ]
 
 [[package]]

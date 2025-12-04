@@ -2,16 +2,18 @@ from __future__ import annotations
 
 import logging
 import tempfile
-from collections.abc import Sequence
 from functools import cached_property
 from pathlib import Path, PurePath, PurePosixPath
-from typing import TYPE_CHECKING, Protocol, cast
+from typing import TYPE_CHECKING, Callable, Protocol, cast
 
 import pathspec
 import yt_dlp
 from pydantic import AnyUrl, BaseModel, ConfigDict, DirectoryPath, Field
+from restate.exceptions import TerminalError
 
 from .options import DownloadOptions
+from .progress import Progress
+from .utils import get_youtube_video_id
 
 if TYPE_CHECKING:
     from yt_dlp import _Params
@@ -36,7 +38,7 @@ class DownloadRequest(BaseModel):
         }
     )
 
-    url: str | Sequence[str] = Field(description="URL(s) to download")
+    url: str = Field(description="URL to download")
     output: DownloadRequestOutput
     options: DownloadOptions | None = Field(
         default=None, description="Download options"
@@ -119,15 +121,20 @@ class DirectoryPersister(Protocol):
     ): ...
 
 
+type ProgressHook = Callable[[str, Progress], None]
+
+
 class Executor:
     def __init__(
         self,
         persister: DirectoryPersister,
         defaults: _Params | None = None,
+        progress_hook: ProgressHook | None = None,
         logger: logging.Logger = _logger,
     ):
         self.persister = persister
         self.defaults: _Params = defaults.copy() if defaults else {}
+        self.progress_hook = progress_hook
         self.logger = logger
 
     def download(
@@ -140,6 +147,16 @@ class Executor:
             {"id": id, "url": request.url},
             merge_extra=True,
         )
+
+        video_id = get_youtube_video_id(request.url)
+        if not video_id:
+            raise TerminalError("Invalid YouTube URL", 422)
+
+        def progress_hook(progress: Progress):
+            key = f"yt-dlp:progress:{video_id}:{id}"
+
+            if self.progress_hook:
+                self.progress_hook(key, progress)
 
         logger.info("Downloading video")
 
@@ -154,6 +171,7 @@ class Executor:
                         else {}
                     ),
                     "paths": {"home": tmpdir},
+                    "progress_hooks": [progress_hook],
                 },
             )
 
