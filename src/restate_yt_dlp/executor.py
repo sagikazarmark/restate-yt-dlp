@@ -119,7 +119,7 @@ class DirectoryPersister(Protocol):
     ): ...
 
 
-type ProgressHook = Callable[[str, Progress], None]
+type ProgressHook = Callable[[str, str, Progress], None]
 
 
 class Executor:
@@ -147,10 +147,8 @@ class Executor:
         )
 
         def progress_hook(progress: Progress):
-            key = f"yt-dlp:progress:{id}"
-
             if self.progress_hook:
-                self.progress_hook(key, progress)
+                self.progress_hook(id, request.url, progress)
 
         logger.info("Downloading video")
 

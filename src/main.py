@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 import logging
-from datetime import timedelta
+from hashlib import sha256
 from typing import TYPE_CHECKING, cast
 
 import obstore
@@ -22,7 +22,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from .logger import Logger
 from .params import Params
-from .restate_yt_dlp import Executor, Progress, create_service
+from .restate_yt_dlp import Executor, Progress, ServiceOptions, create_service
 from .restate_yt_dlp.executor import ProgressHook
 
 if TYPE_CHECKING:
@@ -47,17 +47,15 @@ class Settings(BaseSettings):
 
     obstore: ObstoreSettings = Field(default_factory=ObstoreSettings)
 
-    yt_dlp_defaults: Params | None = None
+    yt_dlp_defaults: Params = {}
 
     valkey: ValkeySettings | None = Field(default=None, description="Valkey settings")
 
-    service_name: str = "yt-dlp"
-
-    inactivity_timeout: timedelta | None = Field(
-        alias="restate_inactivity_timeout",
-        default=None,
+    restate_service: ServiceOptions = Field(
+        default_factory=ServiceOptions,
+        description="Restate service options",
     )
-    abort_timeout: timedelta | None = Field(alias="restate_abort_timeout", default=None)
+
     identity_keys: list[str] = Field(alias="restate_identity_keys", default=[])
 
 
@@ -114,8 +112,11 @@ if settings.valkey:
 
     client = GlideClient.create(config)
 
-    def valkey_progress_hook(key: str, progress: Progress):
-        client.set(key, json.dumps(progress))
+    def valkey_progress_hook(id: str, url: str, progress: Progress):
+        url_hash = sha256(url.encode()).hexdigest()
+
+        client.set(f"yt-dlp:progress:by-id:{id}", json.dumps(progress))
+        client.set(f"yt-dlp:progress:by-url-sha256:{url_hash}", json.dumps(progress))
 
     progress_hook = valkey_progress_hook
 
@@ -123,18 +124,12 @@ executor = Executor(
     persister,
     defaults=cast(
         "_Params",
-        (settings.yt_dlp_defaults or {})
-        | {"logger": Logger(structlog.get_logger("yt-dlp"))},
+        settings.yt_dlp_defaults | {"logger": Logger(structlog.get_logger("yt-dlp"))},
     ),
     progress_hook=progress_hook,
     logger=structlog.get_logger("executor"),
 )
 
-service = create_service(
-    executor,
-    service_name=settings.service_name,
-    inactivity_timeout=settings.inactivity_timeout,
-    abort_timeout=settings.abort_timeout,
-)
+service = create_service(executor, settings.restate_service)
 
 app = restate.app(services=[service], identity_keys=settings.identity_keys)
