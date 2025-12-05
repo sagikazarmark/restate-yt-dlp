@@ -115,8 +115,29 @@ if settings.valkey:
     def valkey_progress_hook(id: str, url: str, progress: Progress):
         url_hash = sha256(url.encode()).hexdigest()
 
-        client.set(f"yt-dlp:progress:by-id:{id}", json.dumps(progress))
-        client.set(f"yt-dlp:progress:by-url-sha256:{url_hash}", json.dumps(progress))
+        fields = [
+            "status",
+            "downloaded_bytes",
+            "total_bytes",
+            "total_bytes_estimate",
+            "elapsed",
+            "eta",
+            "speed",
+            "_percent_str",
+            "_speed_str",
+            "_eta_str",
+            "_total_bytes_str",
+            "_total_bytes_estimate_str",
+            "_downloaded_bytes_str",
+            "_elapsed_str",
+        ]
+        p = {k: progress[k] for k in fields if k in progress}
+
+        client.set(f"yt-dlp:progress:by-id:{id}", json.dumps(p))
+        client.set(f"yt-dlp:progress:by-url-sha256:{url_hash}", json.dumps(p))
+
+        client.set(f"yt-dlp:info:by-id:{id}", json.dumps(progress))
+        client.set(f"yt-dlp:info:by-url-sha256:{url_hash}", json.dumps(progress))
 
     progress_hook = valkey_progress_hook
 
