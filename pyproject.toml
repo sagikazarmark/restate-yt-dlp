@@ -10,6 +10,7 @@ requires-python = ">=3.13"
 dependencies = [
     "pathspec>=0.12.1",
     "pydantic>=2.12.4",
+    "pydantic-restate",
     "restate-sdk[serde]>=0.11.0",
     "yt-dlp[default]>=2025.10.22",
 ]
@@ -32,6 +33,7 @@ build-backend = "uv_build"
 [tool.uv.sources]
 workstate = { git = "https://github.com/sagikazarmark/workstate", rev = "v0.0.11" }
 pydantic-obstore = { git = "https://github.com/sagikazarmark/pydantic-obstore", rev = "v0.0.4" }
+pydantic-restate = { git = "https://github.com/sagikazarmark/pydantic-restate", rev = "v0.0.3" }
 
 [dependency-groups]
 dev = [

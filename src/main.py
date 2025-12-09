@@ -18,12 +18,14 @@ from glide_sync import (
     ServerCredentials,
 )
 from pydantic import BaseModel, Field, RedisDsn
+from pydantic_restate import WorkerSettings
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from .logger import Logger
 from .params import Params
-from .restate_yt_dlp import Executor, Progress, ServiceOptions, create_service
+from .restate_yt_dlp import Executor, Progress, create_service
 from .restate_yt_dlp.executor import ProgressHook
+from .restate_yt_dlp.restate import Options as RestateOptions
 
 if TYPE_CHECKING:
     from obstore.store import ClientConfig
@@ -32,6 +34,10 @@ if TYPE_CHECKING:
 
 class ObstoreSettings(pydantic_obstore.Config):
     url: str | None = None
+
+
+class Restate(RestateOptions, WorkerSettings):
+    pass
 
 
 class ValkeySettings(BaseModel):
@@ -51,15 +57,10 @@ class Settings(BaseSettings):
 
     valkey: ValkeySettings | None = Field(default=None, description="Valkey settings")
 
-    restate_service: ServiceOptions = Field(
-        default_factory=ServiceOptions,
-        description="Restate service options",
-    )
-
-    identity_keys: list[str] = Field(alias="restate_identity_keys", default=[])
+    restate: Restate = Field(default_factory=Restate, description="Restate settings")
 
 
-settings = Settings()  # pyright: ignore[reportCallIssue]
+settings = Settings()
 
 # logging.basicConfig(level=logging.INFO)
 structlog.stdlib.recreate_defaults(log_level=logging.INFO)
@@ -151,6 +152,6 @@ executor = Executor(
     logger=structlog.get_logger("executor"),
 )
 
-service = create_service(executor, settings.restate_service)
+service = create_service(executor, settings.restate)
 
-app = restate.app(services=[service], identity_keys=settings.identity_keys)
+app = restate.app(services=[service], identity_keys=settings.restate.identity_keys)

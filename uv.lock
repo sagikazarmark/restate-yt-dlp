@@ -470,6 +470,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "pydantic-restate"
+version = "0.0.3"
+source = { git = "https://github.com/sagikazarmark/pydantic-restate?rev=v0.0.3#e734f27d06bb00879d3733356f5b760ebbc355f9" }
+dependencies = [
+    { name = "pydantic" },
+    { name = "restate-sdk", extra = ["serde"] },
+]
+
+[[package]]
 name = "pydantic-settings"
 version = "2.12.0"
 source = { registry = "https://pypi.org/simple" }
@@ -571,6 +580,7 @@ source = { editable = "." }
 dependencies = [
     { name = "pathspec" },
     { name = "pydantic" },
+    { name = "pydantic-restate" },
     { name = "restate-sdk", extra = ["serde"] },
     { name = "yt-dlp", extra = ["default"] },
 ]
@@ -599,6 +609,7 @@ requires-dist = [
     { name = "pathspec", specifier = ">=0.12.1" },
     { name = "pydantic", specifier = ">=2.12.4" },
     { name = "pydantic-obstore", marker = "extra == 'app'", git = "https://github.com/sagikazarmark/pydantic-obstore?rev=v0.0.4" },
+    { name = "pydantic-restate", git = "https://github.com/sagikazarmark/pydantic-restate?rev=v0.0.3" },
     { name = "pydantic-settings", marker = "extra == 'app'", specifier = ">=2.12.0" },
     { name = "restate-sdk", extras = ["serde"], specifier = ">=0.11.0" },
     { name = "structlog", marker = "extra == 'app'", specifier = ">=25.5.0" },
