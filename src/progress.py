@@ -7,13 +7,9 @@ from .restate_yt_dlp import Progress
 
 
 class ValkeyProgressHook:
-    def __init__(self, client: GlideClient):
-        self.client = client
-
-    def __call__(self, invocation_id: str, url: str, progress: Progress):
-        id = progress.get("info_dict", {}).get("id", None)
-
-        fields = [
+    # Fields to extract for progress updates
+    PROGRESS_FIELDS = frozenset(
+        [
             "status",
             "downloaded_bytes",
             "total_bytes",
@@ -29,7 +25,17 @@ class ValkeyProgressHook:
             "_downloaded_bytes_str",
             "_elapsed_str",
         ]
-        partial_progress = {k: progress[k] for k in fields if k in progress}
+    )
+
+    def __init__(self, client: GlideClient):
+        self.client = client
+
+    def __call__(self, invocation_id: str, url: str, progress: Progress):
+        id = progress.get("info_dict", {}).get("id", None)
+
+        partial_progress = {
+            k: progress[k] for k in self.PROGRESS_FIELDS if k in progress
+        }
 
         info_json = json.dumps(progress)
         progress_json = json.dumps(partial_progress)
