@@ -39,7 +39,7 @@ services:
     environment:
       - REDIS_HOST=valkey
       - REDIS_PORT=6379
-      - RI_DATABASE_MANAGEMENT=false
+      # - RI_DATABASE_MANAGEMENT=false
     ports:
       - 127.0.0.1:5540:5540
     volumes:

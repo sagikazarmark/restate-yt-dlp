@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import json
 import logging
 from typing import TYPE_CHECKING, cast
 
@@ -22,7 +21,8 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from .logger import Logger
 from .params import Params
-from .restate_yt_dlp import Executor, Progress, create_service
+from .progress import ValkeyProgressHook
+from .restate_yt_dlp import Executor, create_service
 from .restate_yt_dlp.executor import ProgressHook
 from .restate_yt_dlp.restate import Options as RestateOptions
 
@@ -112,65 +112,7 @@ if settings.valkey:
 
     client = GlideClient.create(config)
 
-    def valkey_progress_hook(invocation_id: str, url: str, progress: Progress):
-        id = progress.get("info_dict", {}).get("id", None)
-
-        fields = [
-            "status",
-            "downloaded_bytes",
-            "total_bytes",
-            "total_bytes_estimate",
-            "elapsed",
-            "eta",
-            "speed",
-            "_percent_str",
-            "_speed_str",
-            "_eta_str",
-            "_total_bytes_str",
-            "_total_bytes_estimate_str",
-            "_downloaded_bytes_str",
-            "_elapsed_str",
-        ]
-        partial_progress = {k: progress[k] for k in fields if k in progress}
-
-        info_json = json.dumps(progress)
-        progress_json = json.dumps(partial_progress)
-
-        filename = progress.get("filename", None)
-        downloaded_bytes = str(progress.get("downloaded_bytes", 0))
-
-        if id:
-            client.set(f"yt-dlp:download:info:by-id:{id}", info_json)
-            client.set(f"yt-dlp:download:progress:by-id:{id}", progress_json)
-
-            if filename:
-                client.hset(
-                    f"yt-dlp:download:downloaded-bytes:by-id:{id}",
-                    {filename: downloaded_bytes},
-                )
-
-        client.set(f"yt-dlp:download:info:by-url:{url}", info_json)
-        client.set(f"yt-dlp:download:progress:by-url:{url}", progress_json)
-
-        if filename:
-            client.hset(
-                f"yt-dlp:download:downloaded-bytes:by-url:{url}",
-                {filename: downloaded_bytes},
-            )
-
-        client.set(f"yt-dlp:download:info:by-invocation-id:{invocation_id}", info_json)
-        client.set(
-            f"yt-dlp:download:progress:by-invocation-id:{invocation_id}",
-            progress_json,
-        )
-
-        if filename:
-            client.hset(
-                f"yt-dlp:download:downloaded-bytes:by-invocation-id:{invocation_id}",
-                {filename: downloaded_bytes},
-            )
-
-    progress_hook = valkey_progress_hook
+    progress_hook = ValkeyProgressHook(client)
 
 executor = Executor(
     persister,
