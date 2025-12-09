@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 
-from glide_sync import GlideClient
+from glide_sync import Batch, GlideClient
 
 from .restate_yt_dlp import Progress
 
@@ -46,35 +46,39 @@ class ValkeyProgressHook:
 
         downloaded_bytes = str(progress.get("downloaded_bytes", 0))
 
+        pipeline = Batch(is_atomic=False)
+
         if id:
-            self.client.set(f"yt-dlp:download:info:by-id:{id}", info_json)
-            self.client.set(f"yt-dlp:download:progress:by-id:{id}", progress_json)
+            pipeline.set(f"yt-dlp:download:info:by-id:{id}", info_json)
+            pipeline.set(f"yt-dlp:download:progress:by-id:{id}", progress_json)
 
             if filename:
-                self.client.hset(
+                pipeline.hset(
                     f"yt-dlp:download:downloaded-bytes:by-id:{id}",
                     {filename: downloaded_bytes},
                 )
 
-        self.client.set(f"yt-dlp:download:info:by-url:{url}", info_json)
-        self.client.set(f"yt-dlp:download:progress:by-url:{url}", progress_json)
+        pipeline.set(f"yt-dlp:download:info:by-url:{url}", info_json)
+        pipeline.set(f"yt-dlp:download:progress:by-url:{url}", progress_json)
 
         if filename:
-            self.client.hset(
+            pipeline.hset(
                 f"yt-dlp:download:downloaded-bytes:by-url:{url}",
                 {filename: downloaded_bytes},
             )
 
-        self.client.set(
+        pipeline.set(
             f"yt-dlp:download:info:by-invocation-id:{invocation_id}", info_json
         )
-        self.client.set(
+        pipeline.set(
             f"yt-dlp:download:progress:by-invocation-id:{invocation_id}",
             progress_json,
         )
 
         if filename:
-            self.client.hset(
+            pipeline.hset(
                 f"yt-dlp:download:downloaded-bytes:by-invocation-id:{invocation_id}",
                 {filename: downloaded_bytes},
             )
+
+        self.client.exec(pipeline, False)
