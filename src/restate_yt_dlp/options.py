@@ -26,7 +26,7 @@ SafeRelativePath = Annotated[
 ]
 
 
-class DownloadOptions(BaseModel):
+class RequestOptions(BaseModel):
     # Format selection
     format: str | None = Field(
         default=None,

@@ -1,5 +1,5 @@
 from .executor import Executor
-from .options import DownloadOptions
+from .options import RequestOptions
 from .progress import Progress
 from .restate import (
     HandlerOptions,
@@ -11,7 +11,7 @@ from .restate import (
 
 __all__ = [
     "Executor",
-    "DownloadOptions",
+    "RequestOptions",
     "Progress",
     "HandlerOptions",
     "Options",

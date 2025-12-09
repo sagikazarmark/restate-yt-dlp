@@ -3,7 +3,7 @@ from pathlib import PurePosixPath
 import pytest
 
 from restate_yt_dlp.options import (
-    DownloadOptions,
+    RequestOptions,
     validate_no_parent_refs,
     validate_path_string,
 )
@@ -110,12 +110,12 @@ class TestSafeRelativePath:
             validate_no_parent_refs(path_obj)
 
 
-class TestDownloadOptions:
-    """Tests for DownloadOptions Pydantic model."""
+class TestRequestOptions:
+    """Tests for RequestOptions Pydantic model."""
 
     def test_empty_model_creation(self):
         """Test creating model with no arguments."""
-        options = DownloadOptions()
+        options = RequestOptions()
         assert options.format is None
         assert options.allow_unplayable_formats is None
         assert options.outtmpl is None
@@ -123,7 +123,7 @@ class TestDownloadOptions:
 
     def test_basic_field_assignment(self):
         """Test assigning basic field types."""
-        options = DownloadOptions(
+        options = RequestOptions(
             format="best",
             allow_unplayable_formats=True,
             restrictfilenames=False,
@@ -138,7 +138,7 @@ class TestDownloadOptions:
 
     def test_outtmpl_single_string_path(self):
         """Test outtmpl with single string path."""
-        options = DownloadOptions(outtmpl="videos/%(title)s.%(ext)s")
+        options = RequestOptions(outtmpl="videos/%(title)s.%(ext)s")
         assert options.outtmpl == "videos/%(title)s.%(ext)s"
 
     def test_outtmpl_mapping_paths(self):
@@ -147,7 +147,7 @@ class TestDownloadOptions:
             "default": "videos/%(title)s.%(ext)s",
             "thumbnail": "thumbnails/%(title)s.%(ext)s",
         }
-        options = DownloadOptions(outtmpl=template_mapping)
+        options = RequestOptions(outtmpl=template_mapping)
         expected = {
             "default": "videos/%(title)s.%(ext)s",
             "thumbnail": "thumbnails/%(title)s.%(ext)s",
@@ -156,12 +156,12 @@ class TestDownloadOptions:
 
     def test_outtmpl_invalid_absolute_path(self):
         """Test that absolute paths in outtmpl are accepted as strings."""
-        options = DownloadOptions(outtmpl="/absolute/path/%(title)s.%(ext)s")
+        options = RequestOptions(outtmpl="/absolute/path/%(title)s.%(ext)s")
         assert options.outtmpl == "/absolute/path/%(title)s.%(ext)s"
 
     def test_outtmpl_invalid_parent_ref(self):
         """Test that parent references in outtmpl are accepted as strings."""
-        options = DownloadOptions(outtmpl="../parent/%(title)s.%(ext)s")
+        options = RequestOptions(outtmpl="../parent/%(title)s.%(ext)s")
         assert options.outtmpl == "../parent/%(title)s.%(ext)s"
 
     def test_outtmpl_mapping_with_invalid_path(self):
@@ -170,7 +170,7 @@ class TestDownloadOptions:
             "default": "videos/%(title)s.%(ext)s",
             "thumbnail": "../thumbnails/%(title)s.%(ext)s",
         }
-        options = DownloadOptions(outtmpl=template_mapping)
+        options = RequestOptions(outtmpl=template_mapping)
         assert options.outtmpl == template_mapping
 
     def test_outtmpl_mapping_individual_validation(self):
@@ -181,19 +181,19 @@ class TestDownloadOptions:
             "thumbnail": "thumbs/%(title)s.%(ext)s",
             "subtitle": "subs/%(title)s.%(ext)s",
         }
-        options = DownloadOptions(outtmpl=valid_mapping)
+        options = RequestOptions(outtmpl=valid_mapping)
         assert len(options.outtmpl) == 3
         for path in options.outtmpl.values():
             assert isinstance(path, str)
 
     def test_outtmpl_empty_string_error(self):
         """Test that empty string in outtmpl is accepted."""
-        options = DownloadOptions(outtmpl="")
+        options = RequestOptions(outtmpl="")
         assert options.outtmpl == ""
 
     def test_format_sort_list(self):
         """Test format_sort accepts list of strings."""
-        options = DownloadOptions(format_sort=["quality", "filesize", "fps"])
+        options = RequestOptions(format_sort=["quality", "filesize", "fps"])
         assert options.format_sort == ["quality", "filesize", "fps"]
 
     def test_all_boolean_fields(self):
@@ -225,20 +225,20 @@ class TestDownloadOptions:
 
         for field_name in boolean_fields:
             # Test True
-            options = DownloadOptions(**{field_name: True})
+            options = RequestOptions(**{field_name: True})
             assert getattr(options, field_name) is True
 
             # Test False
-            options = DownloadOptions(**{field_name: False})
+            options = RequestOptions(**{field_name: False})
             assert getattr(options, field_name) is False
 
             # Test None (default)
-            options = DownloadOptions()
+            options = RequestOptions()
             assert getattr(options, field_name) is None
 
     def test_integer_fields(self):
         """Test integer fields accept valid integers."""
-        options = DownloadOptions(
+        options = RequestOptions(
             trim_file_name=100,
             min_filesize=1024,
             max_filesize=1073741824,
@@ -249,7 +249,7 @@ class TestDownloadOptions:
 
     def test_string_fields(self):
         """Test string fields accept valid strings."""
-        options = DownloadOptions(
+        options = RequestOptions(
             format="best[height<=720]",
             outtmpl_na_placeholder="N/A",
             subtitlesformat="vtt",
@@ -266,7 +266,7 @@ class TestDownloadOptions:
 
     def test_list_fields(self):
         """Test list fields accept valid lists."""
-        options = DownloadOptions(
+        options = RequestOptions(
             format_sort=["quality", "filesize"],
             subtitleslangs=["en", "es", "fr"],
         )
@@ -275,7 +275,7 @@ class TestDownloadOptions:
 
     def test_model_serialization(self):
         """Test that the model can be serialized to dict."""
-        options = DownloadOptions(
+        options = RequestOptions(
             format="best",
             outtmpl="videos/%(title)s.%(ext)s",
             writesubtitles=True,
@@ -297,7 +297,7 @@ class TestDownloadOptions:
             "default": "videos/%(title)s.%(ext)s",
             "thumbnail": "thumbnails/%(title)s.%(ext)s",
         }
-        options = DownloadOptions(outtmpl=template_mapping)
+        options = RequestOptions(outtmpl=template_mapping)
 
         data = options.model_dump()
         assert isinstance(data["outtmpl"], dict)
@@ -314,7 +314,7 @@ class TestDownloadOptions:
             "format_sort": ["quality"],
         }
 
-        options = DownloadOptions(**data)
+        options = RequestOptions(**data)
         assert options.format == "worst"
         assert options.outtmpl == "downloads/%(title)s.%(ext)s"
         assert options.writeinfojson is True
@@ -322,7 +322,7 @@ class TestDownloadOptions:
 
     def test_field_descriptions_exist(self):
         """Test that all fields have descriptions."""
-        schema = DownloadOptions.model_json_schema()
+        schema = RequestOptions.model_json_schema()
         properties = schema["properties"]
 
         # Check that all fields have descriptions
@@ -343,7 +343,7 @@ class TestDownloadOptions:
             "infojson": "%(uploader)s/%(playlist)s/info/%(title)s.info.json",
         }
 
-        options = DownloadOptions(outtmpl=complex_mapping)
+        options = RequestOptions(outtmpl=complex_mapping)
 
         assert isinstance(options.outtmpl, dict)
         assert len(options.outtmpl) == 4
@@ -355,7 +355,7 @@ class TestDownloadOptions:
     def test_edge_cases(self):
         """Test various edge cases and corner scenarios."""
         # Test with None values (should be fine)
-        options = DownloadOptions(
+        options = RequestOptions(
             format=None,
             outtmpl=None,
             writesubtitles=None,
@@ -365,11 +365,11 @@ class TestDownloadOptions:
         assert options.writesubtitles is None
 
         # Test with single character paths
-        options = DownloadOptions(outtmpl="a")
+        options = RequestOptions(outtmpl="a")
         assert options.outtmpl == "a"
 
         # Test with path containing special characters
-        options = DownloadOptions(outtmpl="videos/%(title)s [%(uploader)s].%(ext)s")
+        options = RequestOptions(outtmpl="videos/%(title)s [%(uploader)s].%(ext)s")
         assert "%(title)s [%(uploader)s]" in str(options.outtmpl)
 
     def test_realistic_configuration(self):
@@ -392,7 +392,7 @@ class TestDownloadOptions:
             "max_filesize": 1073741824,
         }
 
-        options = DownloadOptions(**realistic_config)
+        options = RequestOptions(**realistic_config)
 
         # Verify the configuration was applied correctly
         assert options.format == "best[height<=1080]"

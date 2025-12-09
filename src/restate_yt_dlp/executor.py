@@ -4,13 +4,30 @@ import logging
 import tempfile
 from functools import cached_property
 from pathlib import Path, PurePath, PurePosixPath
-from typing import TYPE_CHECKING, Callable, Protocol, cast
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Callable,
+    Literal,
+    Protocol,
+    Required,
+    TypedDict,
+    cast,
+)
 
 import pathspec
 import yt_dlp
 from pydantic import AnyUrl, BaseModel, ConfigDict, DirectoryPath, Field
+from restate.exceptions import TerminalError
+from yt_dlp.networking.exceptions import HTTPError, TransportError
+from yt_dlp.utils import (
+    DownloadError,
+    ExtractorError,
+    UnavailableVideoError,
+    UnsupportedError,
+)
 
-from .options import DownloadOptions
+from .options import RequestOptions
 from .progress import Progress
 
 if TYPE_CHECKING:
@@ -20,7 +37,7 @@ _logger = logging.getLogger(__name__)
 
 
 class DownloadRequest(BaseModel):
-    """Request for downloading one or more videos using yt-dlp."""
+    """Request for downloading a videos using yt-dlp."""
 
     model_config = ConfigDict(
         json_schema_extra={
@@ -38,9 +55,53 @@ class DownloadRequest(BaseModel):
 
     url: str = Field(description="URL to download")
     output: DownloadRequestOutput
-    options: DownloadOptions | None = Field(
-        default=None, description="Download options"
+    options: RequestOptions | None = Field(default=None, description="Download options")
+
+
+class ExtractInfoRequest(BaseModel):
+    """Request for extracting information using yt-dlp."""
+
+    model_config = ConfigDict(
+        json_schema_extra={
+            "examples": [
+                {
+                    "url": "https://www.youtube.com/watch?v=_fjbR0qKT8w",
+                    "options": {},
+                },
+            ]
+        }
     )
+
+    url: str = Field(description="URL to extract information from")
+    options: RequestOptions | None = Field(default=None)
+
+
+class ExtractInfoResponse(TypedDict, total=False):
+    age_limit: int
+    availability: (
+        Literal[
+            "private",
+            "premium_only",
+            "subscriber_only",
+            "needs_auth",
+            "unlisted",
+            "public",
+        ]
+        | None
+    )
+    available_at: int
+    creator: str | None
+    comment_count: int | None
+    duration: int | None
+    formats: list[dict[str, Any]] | None
+    id: Required[str]
+    like_count: int | None
+    tags: list[str] | None
+    thumbnail: str | None
+    timestamp: int | float | None
+    title: str | None
+    uploader: str | None
+    url: str | None
 
 
 class DownloadRequestOutput(BaseModel):
@@ -176,3 +237,112 @@ class Executor:
                 Path(tmpdir),
                 request.output.filter,
             )
+
+    def extract_info(
+        self,
+        id: str,
+        request: ExtractInfoRequest,
+    ) -> ExtractInfoResponse:
+        logger = logging.LoggerAdapter(
+            self.logger,
+            {"id": id, "url": request.url},
+            merge_extra=True,
+        )
+
+        logger.info("Extracting video info")
+
+        params = cast(
+            "_Params",
+            {
+                **self.defaults.copy(),
+                **(
+                    request.options.model_dump(exclude_none=True)
+                    if request.options
+                    else {}
+                ),
+            },
+        )
+
+        try:
+            info = yt_dlp.YoutubeDL(params).extract_info(request.url, download=False)
+        except (DownloadError, ExtractorError) as err:
+            if is_retryable_error(err):
+                # Re-raise retryable errors - Restate will retry them
+                raise
+            else:
+                # Wrap non-retryable errors in TerminalError
+                # Extract the actual error message
+                actual_exception = getattr(err, "exc_info", [None, None])[1]
+                error_msg = str(actual_exception) if actual_exception else str(err)
+
+                raise TerminalError(error_msg, status_code=422) from err
+
+        except Exception as err:
+            # Catch any other unexpected errors
+            # Be conservative - treat unknown errors as non-retryable
+            raise TerminalError(
+                f"Unexpected error during download: {type(err).__name__}: {err}",
+            )
+
+        logger.info("Extracting video info completed")
+
+        return info
+
+
+def is_retryable_error(err):
+    """
+    Determine if a yt-dlp error is retryable.
+
+    For DownloadError/ExtractorError, checks the wrapped exception in exc_info[1].
+    """
+    # Get the actual exception to check
+    actual_exception = (
+        getattr(err, "exc_info", [None, None])[1] if hasattr(err, "exc_info") else err
+    )
+
+    # If no wrapped exception, use the error itself
+    if actual_exception is None:
+        actual_exception = err
+
+    # Retryable network/transport errors
+    if isinstance(actual_exception, (TransportError, UnavailableVideoError)):
+        return True
+
+    # HTTPError: 5xx are retryable (except 501), 4xx are not
+    if isinstance(actual_exception, HTTPError):
+        status = actual_exception.status
+        # 503 Service Unavailable, 502 Bad Gateway, 504 Gateway Timeout are retryable
+        if status in (502, 503, 504, 429):  # 429 = Too Many Requests
+            return True
+        # 408 Request Timeout
+        if status == 408:
+            return True
+        # Other 5xx might be retryable (server errors)
+        if 500 <= status < 600 and status != 501:  # 501 Not Implemented is permanent
+            return True
+        # All 4xx are non-retryable (client errors)
+        return False
+
+    # All ExtractorError types are non-retryable (parsing/extraction failures)
+    if isinstance(actual_exception, (ExtractorError, UnsupportedError)):
+        return False
+
+    # Connection/socket errors (these would be wrapped in TransportError, but just in case)
+    import socket
+
+    if isinstance(actual_exception, (socket.timeout, socket.error)):
+        return True
+
+    # DNS errors
+    if isinstance(actual_exception, OSError):
+        # Network unreachable, connection refused, etc.
+        if actual_exception.errno in (
+            101,
+            111,
+            104,
+            113,
+        ):  # ENETUNREACH, ECONNREFUSED, ECONNRESET, EHOSTUNREACH
+            return True
+
+    # Default: assume non-retryable for safety
+    return False
