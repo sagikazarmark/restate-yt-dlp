@@ -1,6 +1,6 @@
 FROM ghcr.io/astral-sh/uv:0.9.18@sha256:5713fa8217f92b80223bc83aac7db36ec80a84437dbc0d04bbc659cae030d8c9 AS uv
 
-FROM denoland/deno:bin-2.6.1@sha256:fe932c131a8442571da017f3bf64aa650731cbbb128d9c9fc047fd0e0d53d8f9 AS deno
+FROM denoland/deno:bin-2.6.3@sha256:9ac6b95faa289ad20ba55e51c9a09fcd96fa8b65365f460ec2880b6c9e2a4e86 AS deno
 
 
 FROM python:3.14.2@sha256:492b292a9449d096aefe5b1399cc64de53359845754da3e4d2539402013c826b AS builder
