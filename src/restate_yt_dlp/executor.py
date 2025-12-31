@@ -45,7 +45,7 @@ class DownloadRequest(BaseModel):
                 {
                     "url": "https://www.youtube.com/watch?v=_fjbR0qKT8w",
                     "output": {
-                        "destination": "s3://bucket/videoid/",
+                        "location": "s3://bucket/videoid/",
                     },
                     "options": {},
                 },
@@ -105,7 +105,7 @@ class ExtractInfoResponse(TypedDict, total=False):
 
 
 class DownloadRequestOutput(BaseModel):
-    destination: AnyUrl | PurePosixPath = Field(
+    location: AnyUrl | PurePosixPath = Field(
         description="Output destination for downloaded content",
         examples=["s3://bucket/videoid/"],
         union_mode="left_to_right",  # This is important to keep best match order (TODO: consider using a custom discriminator)
@@ -233,7 +233,7 @@ class Executor:
             logger.info("Downloading video completed")
 
             self.persister.persist(
-                request.output.destination,
+                request.output.location,
                 Path(tmpdir),
                 request.output.filter,
             )
