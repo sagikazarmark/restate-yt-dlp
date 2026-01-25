@@ -749,23 +749,23 @@ wheels = [
 
 [[package]]
 name = "valkey-glide-sync"
-version = "2.2.5"
+version = "2.2.6"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "cffi" },
     { name = "protobuf" },
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/bd/b6/5b9c58cfcbc0b4cf0f735bc8c2347f984b38ace59155d147c031fa75d438/valkey_glide_sync-2.2.5.tar.gz", hash = "sha256:142dc2eb40a66354aabda2ffe965df4d7c68ba52822abdadda12d16247dab3ba", size = 582099, upload-time = "2026-01-09T21:30:50.271Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/02/60/93aafadca24a19512561f8d4c225ae340d61cd8a7a2417feaa56b69d6726/valkey_glide_sync-2.2.6.tar.gz", hash = "sha256:13e8d0248f02057483e09ef93128be3d73fb6675d22a64590440a4c3197e636a", size = 587874, upload-time = "2026-01-19T21:35:34.198Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/5f/39/d1a7fbc38e35b161fe6006ff241484b6fc6feef34e25760da827284b3f9a/valkey_glide_sync-2.2.5-cp313-cp313-macosx_10_13_x86_64.whl", hash = "sha256:c7d3e0474fa6b1df8f84145a290241e78975856295cf4f4d432d709b602752de", size = 4979601, upload-time = "2026-01-09T21:30:10.073Z" },
-    { url = "https://files.pythonhosted.org/packages/0b/50/287f8391cdf8ba8d3c2e0628e03792ff70cc67109205414d8ef72d623c2a/valkey_glide_sync-2.2.5-cp313-cp313-macosx_11_0_arm64.whl", hash = "sha256:f618baed55e0941e68eb932aecd6b2366f79c08616f00b52ec4d05fb6e71bf24", size = 4604413, upload-time = "2026-01-09T21:30:11.749Z" },
-    { url = "https://files.pythonhosted.org/packages/77/d0/71aaf1d8ea8f52fcc89d088810317d11f0b81c1df645bb81a37926863c5b/valkey_glide_sync-2.2.5-cp313-cp313-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:b73446e81d81f842c733981afe68bcb5641f9a63b3524cace3f7ae510c5ffbfb", size = 4918162, upload-time = "2026-01-09T21:30:13.186Z" },
-    { url = "https://files.pythonhosted.org/packages/3c/23/80c3063dbab3404427fb59f4082030d6163baf4636edae8619b9cc2c6398/valkey_glide_sync-2.2.5-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:e9eac57e2113d356bd78b7bdb43a94d42f91817fdcdf13de6fa3b68dd337192c", size = 5199168, upload-time = "2026-01-09T21:30:15.773Z" },
-    { url = "https://files.pythonhosted.org/packages/5b/38/0864e4fcba3ec779a1b4433c4af6e01d322bffb5fb71092de344d42e8704/valkey_glide_sync-2.2.5-cp314-cp314-macosx_10_15_x86_64.whl", hash = "sha256:b85fcdbb2e19155f9954c2494cbd7f58825225ba03774920c75a5a45c0dbbba8", size = 4979820, upload-time = "2026-01-09T21:30:17.305Z" },
-    { url = "https://files.pythonhosted.org/packages/cf/86/8e38ed351762fc91cae330b240758c42587db79758c3cf27c67a72fe1ba4/valkey_glide_sync-2.2.5-cp314-cp314-macosx_11_0_arm64.whl", hash = "sha256:c0c20387795ad1b7023f53b89d30b0269ea331805bd6c77e5160af61e490576a", size = 4604413, upload-time = "2026-01-09T21:30:19.284Z" },
-    { url = "https://files.pythonhosted.org/packages/ad/29/ada62a3a12030f4aa3855013a01ac696bfbde307208e95aa5fbf263d12f2/valkey_glide_sync-2.2.5-cp314-cp314-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:52edb48a1f119d1d3748ff2ee4abc8dbdfde7563881c4eb5982d252e0819c62c", size = 4918161, upload-time = "2026-01-09T21:30:20.841Z" },
-    { url = "https://files.pythonhosted.org/packages/6e/9a/2859e5d9580a798023fe7267a830151c8b6b6e9f40b2390ca4e85b459104/valkey_glide_sync-2.2.5-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:a69523c626ec6a9d1b305e30a0237edaa03fa773d040687cbc4d228e9fe697dc", size = 5199169, upload-time = "2026-01-09T21:30:22.287Z" },
+    { url = "https://files.pythonhosted.org/packages/34/77/d974b7a41595b4e471c772eec8de4126e49cd9dd04c9a1a2c83a96cd018b/valkey_glide_sync-2.2.6-cp313-cp313-macosx_10_13_x86_64.whl", hash = "sha256:ec1c8e7b4394d2ff4cc0bbc1a70850e92ccffb83b020bd9fff752bd87594551f", size = 4984451, upload-time = "2026-01-19T21:34:56.031Z" },
+    { url = "https://files.pythonhosted.org/packages/55/6b/3f843392efde14d35baba5345ca899d19651cc81f86097e10fc3f779eb69/valkey_glide_sync-2.2.6-cp313-cp313-macosx_11_0_arm64.whl", hash = "sha256:1392bda94a5708f8755987f09e0c27cf284460f192225c786a617bc510475733", size = 4610550, upload-time = "2026-01-19T21:34:57.429Z" },
+    { url = "https://files.pythonhosted.org/packages/30/86/2e38474cc9ca7afb168035eff09834898875619b6494a193159b4482a6af/valkey_glide_sync-2.2.6-cp313-cp313-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:4c05704b9004e101f87c5a3897577b8a1ed266ced0cc0859d385bb1622bd8415", size = 4927455, upload-time = "2026-01-19T21:34:59.117Z" },
+    { url = "https://files.pythonhosted.org/packages/31/15/afa208da4805bebdb1fd0b4a298e7eb4ad449c11628b9f5b055eb49d5956/valkey_glide_sync-2.2.6-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:42db9d919202960f843c47db36fad2d917112c047cdb1ad4aaa92efc1c2c5a78", size = 5204082, upload-time = "2026-01-19T21:35:02.083Z" },
+    { url = "https://files.pythonhosted.org/packages/a2/9c/edd775b9b0de27f5f797c4e299a649e7b7ca3a080011d9900f9d1c0eea13/valkey_glide_sync-2.2.6-cp314-cp314-macosx_10_15_x86_64.whl", hash = "sha256:fd34e30347f64e90751081d650ccdc1c22fa8573f900c1d95b3fc90f5ceee88d", size = 4984866, upload-time = "2026-01-19T21:35:03.56Z" },
+    { url = "https://files.pythonhosted.org/packages/06/3f/a877067cccd008dee6a425edb69207a17e90f07351bee14cbb8a41cc60f9/valkey_glide_sync-2.2.6-cp314-cp314-macosx_11_0_arm64.whl", hash = "sha256:0adc858ff7824557eab4326afdd74382a6d4ec603f84e5c6a7ac15f3c88ae59f", size = 4610550, upload-time = "2026-01-19T21:35:04.853Z" },
+    { url = "https://files.pythonhosted.org/packages/6c/a3/c11ac078377dbe2d9eea6480b5d5dac6a9b037e262c6a3aa6074b29c6cc2/valkey_glide_sync-2.2.6-cp314-cp314-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:b4e7fc716ce4b1623f57bb8f30b53dee5eb5568e20ac384fee998d0614154d0e", size = 4927454, upload-time = "2026-01-19T21:35:06.303Z" },
+    { url = "https://files.pythonhosted.org/packages/17/6f/4f08814d3c86b9d1eb1aa65288d916ef907831f59a5f89115efac754ea2d/valkey_glide_sync-2.2.6-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:46130609f9fb735385223c5d842e73c4c226239a1201a18ef91c12c46a6fbb61", size = 5204082, upload-time = "2026-01-19T21:35:07.701Z" },
 ]
 
 [[package]]
