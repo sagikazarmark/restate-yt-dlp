@@ -1,4 +1,4 @@
-FROM ghcr.io/astral-sh/uv:0.9.27@sha256:143b40f4ab56a780f43377604702107b5a35f83a4453daf1e4be691358718a6a AS uv
+FROM ghcr.io/astral-sh/uv:0.9.28@sha256:59240a65d6b57e6c507429b45f01b8f2c7c0bbeee0fb697c41a39c6a8e3a4cfb AS uv
 
 FROM denoland/deno:bin-2.6.6@sha256:9f18d20207f2699595ea26d14e0b7e123cd0cd01100a577bc11f8ca5906c2d81 AS deno
 
