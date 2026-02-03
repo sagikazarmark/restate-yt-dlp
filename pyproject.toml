@@ -12,7 +12,7 @@ dependencies = [
     "pydantic>=2.12.4",
     "pydantic-restate",
     "restate-sdk[serde]>=0.11.0",
-    "yt-dlp[default]>=2025.10.22",
+    "yt-dlp[default]>=2026.1.31",
 ]
 
 [project.optional-dependencies]
