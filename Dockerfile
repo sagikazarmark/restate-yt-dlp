@@ -3,7 +3,7 @@ FROM ghcr.io/astral-sh/uv:0.10.8@sha256:88234bc9e09c2b2f6d176a3daf411419eb0370d4
 FROM denoland/deno:bin-2.7.3@sha256:e9fdc2ac029d1eb93c489bb72e34349df5b5586eddd2629b12b3216c973bd01d AS deno
 
 
-FROM python:3.14.3@sha256:151ab3571dad616bb031052e86411e2165295c7f67ef27206852203e854bcd12 AS builder
+FROM python:3.14.3@sha256:b66f77a332babd8b2b0190f10a65eeb90c49d8da4696f7a3436baf1b1220eeec AS builder
 
 RUN apt-get update && \
     apt-get install -y git && \
@@ -27,7 +27,7 @@ RUN uv sync --frozen --no-dev --extra app
 
 
 
-FROM python:3.14.3-slim@sha256:486b8092bfb12997e10d4920897213a06563449c951c5506c2a2cfaf591c599f
+FROM python:3.14.3-slim@sha256:6a27522252aef8432841f224d9baaa6e9fce07b07584154fa0b9a96603af7456
 
 WORKDIR /usr/src/app
 
